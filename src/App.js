@@ -5,12 +5,14 @@ function App() {
   const [results, setResults] = useState([]);
 
   useEffect(() => {
-    axios.get('https://hn.algolia.com/api/v1/search?query=reacthooks')
-      .then(response => {
-        // console.log('response.data.hits =>', response.data.hits);
-        setResults(response.data.hits)
-      });
+    getResults();
   }, []);
+
+  const getResults = async () => {
+    const response = await axios.get('https://hn.algolia.com/api/v1/search?query=reacthooks');
+    setResults(response.data.hits);
+    // This can not be inside the useEffect hooks.
+  }
 
   return (
     <>
