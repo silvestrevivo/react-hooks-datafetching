@@ -4,6 +4,8 @@ import axios from 'axios';
 function App() {
   const [results, setResults] = useState([]);
   const [query, setQuery] = useState('react hooks');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const searchInputRef = useRef();
 
   useEffect(() => {
@@ -12,9 +14,14 @@ function App() {
   }, []);
 
   const getResults = async () => {
-    const response = await axios.get(`https://hn.algolia.com/api/v1/search?query=${query}`);
-    setResults(response.data.hits);
-    // This can not be inside the useEffect hooks, otherwise it creates an infinite loop
+    setLoading(true);
+    try {
+      const response = await axios.get(`https://hn.algolia.com/api/v1/search?query=${query}`);
+      setResults(response.data.hits);
+    } catch (error) {
+      setError(error);
+    } // This can not be inside the useEffect hooks, otherwise it creates an infinite loop
+    setLoading(false);
   }
 
   const handleSearch = e => {
@@ -38,13 +45,17 @@ function App() {
         <button type="submit">Search</button>
         <button type="button" onClick={handleClearSearch}>Clear</button>
       </form>
-      <ul>
-        {results.map(result => (
-          <li key={result.objectID}>
-            <a href={result.url}>{result.title}</a>
-          </li>
-        ))}
-      </ul>
+      {loading ?
+        (<div>Loading results...</div>)
+          :
+        (<ul>
+          {results.map(result => (
+            <li key={result.objectID}>
+              <a href={result.url}>{result.title}</a>
+            </li>
+          ))}
+        </ul>)}
+      {error && <div>{error.message}</div>}
     </>
   );
 }
