@@ -35,28 +35,30 @@ function App() {
   }
 
   return (
-    <>
-      <form onSubmit={handleSearch}>
+    <div className="container max-w-xl mx-auto p-4 m-2 bg-purple-100 shadow-lg rounded">
+      <h1 className="text-grey-darkest text-3xl font-thin">Hooks news</h1>
+      <form onSubmit={handleSearch} className="mb-2">
         <input
           type="text"
           value={query}
           ref={searchInputRef}
-          onChange={event => setQuery(event.target.value)} />
-        <button type="submit">Search</button>
-        <button type="button" onClick={handleClearSearch}>Clear</button>
+          onChange={event => setQuery(event.target.value)}
+          className="border p-2 rounded"/>
+        <button type="submit" className="bg-orange-500 rounded m-1 p-2 text-white">Search</button>
+        <button type="button" onClick={handleClearSearch} className="bg-teal-500 text-white p-2 rounded">Clear</button>
       </form>
       {loading ?
-        (<div>Loading results...</div>)
+        (<div className="font-bold text-orange-500">Loading results...</div>)
           :
-        (<ul>
+        (<ul className="list-reset leading-normal">
           {results.map(result => (
             <li key={result.objectID}>
-              <a href={result.url}>{result.title}</a>
+              <a href={result.url} className="text-indigo-400 hover:text-indigo-600">{result.title}</a>
             </li>
           ))}
         </ul>)}
-      {error && <div>{error.message}</div>}
-    </>
+      {error && <div className="text-red font-bold">{error.message}</div>}
+    </div>
   );
 }
 
